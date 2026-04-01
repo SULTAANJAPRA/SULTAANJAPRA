@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORLA | Fresh Coffee. Fast Bites.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        morla: {
+                            brown: '#4A3B32',
+                            lightBrown: '#8D6E63',
+                            cream: '#FDFBF7',
+                            orange: '#D97706',
+                            dark: '#1F2937',
+                            green: '#10B981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'steam': 'steam 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        steam: {
+                            '0%, 100%': { opacity: '0.3', transform: 'translateY(0) scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'translateY(-8px) scale(1.1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1F2937;
+            scroll-behavior: smooth;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #D97706;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(31, 41, 55, 0.95), rgba(74, 59, 50, 0.7));
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8D6E63;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D97706;
+        }
+        .floating-badge {
+            animation: float 3s ease-in-out infinite;
+        }
+        /* Logo Coffee Cup Background */
+        .logo-cup-container {
+            position: relative;
+            display: inline-block;
+        }
+        .logo-cup-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+        .logo-cup-bg svg {
+            width: 100%;
+            height: 100%;
+            fill: #D97706;
+        }
+        .logo-steam {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 30px;
+            opacity: 0;
+            z-index: 0;
+        }
+        .logo-steam span {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(to top, rgba(217, 119, 6, 0.6), transparent);
+            border-radius: 50%;
+            animation: steam 2s ease-in-out infinite;
+        }
+        .logo-steam span:nth-child(1) { animation-delay: 0s; }
+        .logo-steam span:nth-child(2) { animation-delay: 0.3s; left: 40%; }
+        .logo-steam span:nth-child(3) { animation-delay: 0.6s; left: 60%; }
+        .logo-text {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <!-- Special Offer Banner -->
+    <div class="bg-morla-orange text-white text-center py-3 text-sm font-bold tracking-wide">
+        <span class="relative z-10"><i class="fas fa-rocket mr-2"></i> 2026 EXCLUSIVE: AI-Powered Ordering Now Live! Get 20% Off Your First Smart Order <span class="underline cursor-pointer ml-2 hover:text-white font-bold">Try Now</span></span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl shadow-lg transition-all duration-300 border-b border-gray-100" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo with Coffee Cup Background -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="showSection('home')">
+                    <div class="logo-cup-container">
+                        <!-- Coffee Cup Background SVG -->
+                        <div class="logo-cup-bg">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.5 3H6C4.9 3 4 3.9 4 5V16C4 17.1 4.9 18 6 18H14C14.55 18 15 17.55 15 17V16H18.5C20.43 16 22 14.43 22 12.5C22 10.57 20.43 9 18.5 9H18V5C18 3.9 17.1 3 16 3H18.5ZM16 11H18.5C19.33 11 20 11.67 20 12.5C20 13.33 19.33 14 18.5 14H16V11ZM6 16V5H16V14H15C14.45 14 14 14.45 14 15V16H6ZM2 7H3V15H2V7Z"/>
+                            </svg>
+                        </div>
+                        <!-- Steam Animation -->
+                        <div class="logo-steam">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <!-- Logo Text -->
+                        <div class="w-14 h-14 bg-morla-orange rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg relative z-10">
+                            <span class="text-white font-heading font-bold text-2xl logo-text">M</span>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <span class="font-heading font-extrabold text-3xl text-morla-brown tracking-tighter block">MORLA</span>
+                        <span class="text-xs text-morla-orange font-medium tracking-widest -mt-1 block">EST. 2023</span>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a onclick="showSection('home')" class="nav-link cursor-pointer text-morla-brown hover:text-morla-orange font-medium transition">Home</a>
+                    <a onclick="showSection('menu')" class="nav-link cursor-pointer text-morla-brown hover:text-morla-orange font-medium transition">Menu</a>
+                    <a onclick="showSection('about')" class="nav-link cursor-pointer text-morla-brown hover:text-morla-orange font-medium transition">About</a>
+                    <a onclick="showSection('contact')" class="nav-link cursor-pointer text-morla-brown hover:text-morla-orange font-medium transition">Contact</a>
+                    <a href="#" class="bg-morla-green text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-600 transition"><i class="fas fa-leaf mr-1"></i> Sustainable</a>
+                </div>
+
+                <!-- Cart & Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" class="relative text-morla-brown hover:text-morla-orange transition transform hover:scale-110 p-2">
+                        <i class="fas fa-shopping-bag text-2xl"></i>
+                        <span id="cart-count" class="absolute top-0 right-0 bg-morla-orange text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center transform scale-0 transition-transform duration-300 shadow-lg">0</span>
+                    </button>
+                    <button class="md:hidden text-morla-brown text-2xl p-2" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-2xl transform origin-top transition-all duration-300">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a onclick="showSection('home'); toggleMobileMenu()" class="block px-3 py-3 text-morla-brown font-medium hover:bg-morla-cream rounded-xl transition">Home</a>
+                <a onclick="showSection('menu'); toggleMobileMenu()" class="block px-3 py-3 text-morla-brown font-medium hover:bg-morla-cream rounded-xl transition">Menu</a>
+                <a onclick="showSection('about'); toggleMobileMenu()" class="block px-3 py-3 text-morla-brown font-medium hover:bg-morla-cream rounded-xl transition">About</a>
+                <a onclick="showSection('contact'); toggleMobileMenu()" class="block px-3 py-3 text-morla-brown font-medium hover:bg-morla-cream rounded-xl transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="min-h-screen">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-morla-brown text-white pt-24 pb-12 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-morla-orange"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-morla-orange rounded-full filter blur-3xl opacity-10"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-morla-green rounded-full filter blur-3xl opacity-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="logo-cup-container">
+                            <div class="logo-cup-bg" style="width: 50px; height: 50px;">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18.5 3H6C4.9 3 4 3.9 4 5V16C4 17.1 4.9 18 6 18H14C14.55 18 15 17.55 15 17V16H18.5C20.43 16 22 14.43 22 12.5C22 10.57 20.43 9 18.5 9H18V5C18 3.9 17.1 3 16 3H18.5ZM16 11H18.5C19.33 11 20 11.67 20 12.5C20 13.33 19.33 14 18.5 14H16V11ZM6 16V5H16V14H15C14.45 14 14 14.45 14 15V16H6ZM2 7H3V15H2V7Z"/>
+                                </svg>
+                            </div>
+                            <div class="w-10 h-10 bg-morla-orange rounded-xl flex items-center justify-center relative z-10">
+                                <span class="text-white font-heading font-bold text-xl">M</span>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="font-heading font-bold text-2xl tracking-tighter">MORLA</h3>
+                            <span class="text-xs text-gray-400">Since 2023</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">Pioneering the future of fast-casual dining. Sustainable, tech-forward, and always delicious.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white hover:bg-morla-orange hover:scale-110 transition-all duration-300 backdrop-blur-sm"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white hover:bg-morla-orange hover:scale-110 transition-all duration-300 backdrop-blur-sm"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white hover:bg-morla-orange hover:scale-110 transition-all duration-300 backdrop-blur-sm"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white hover:bg-morla-orange hover:scale-110 transition-all duration-300 backdrop-blur-sm"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-lg mb-6 text-morla-orange">Quick Links</h4>
+                    <ul class="space-y-3 text-gray-300 text-sm">
+                        <li><a onclick="showSection('home')" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>Home</a></li>
+                        <li><a onclick="showSection('menu')" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>Full Menu</a></li>
+                        <li><a onclick="showSection('about')" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>Our Story</a></li>
+                        <li><a onclick="showSection('contact')" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>Contact</a></li>
+                        <li><a href="#" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>Careers 2026</a></li>
+                        <li><a href="#" class="hover:text-white hover:translate-x-2 transition-transform inline-block cursor-pointer"><i class="fas fa-chevron-right text-xs mr-2 text-morla-orange"></i>AI Ordering</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-lg mb-6 text-morla-orange">Opening Hours</h4>
+                    <ul class="space-y-3 text-gray-300 text-sm">
+                        <li class="flex justify-between border-b border-gray-700 pb-2"><span>Mon - Fri</span> <span class="font-bold text-white">6:00 AM - 10:00 PM</span></li>
+                        <li class="flex justify-between border-b border-gray-700 pb-2"><span>Saturday</span> <span class="font-bold text-white">7:00 AM - 11:00 PM</span></li>
+                        <li class="flex justify-between border-b border-gray-700 pb-2"><span>Sunday</span> <span class="font-bold text-white">7:00 AM - 9:00 PM</span></li>
+                        <li class="flex items-center mt-4 text-morla-green"><i class="fas fa-bolt mr-2"></i> 24/7 Auto-Order Kiosks</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-lg mb-6 text-morla-orange">Stay Connected</h4>
+                    <p class="text-gray-300 text-sm mb-4">Subscribe for exclusive offers, new menu alerts, and sustainability updates.</p>
+                    <form onsubmit="event.preventDefault(); alert('Welcome to MORLA 2026!');" class="flex flex-col space-y-3">
+                        <input type="email" placeholder="Your Email" class="bg-white/10 border border-gray-600 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-morla-orange transition backdrop-blur-sm">
+                        <button class="bg-morla-orange hover:bg-orange-600 text-white font-bold py-3 rounded-xl transition shadow-lg">Subscribe</button>
+                    </form>
+                    <div class="mt-6 flex items-center space-x-2 text-xs text-gray-400">
+                        <i class="fas fa-shield-alt text-morla-green"></i>
+                        <span>We respect your privacy. No spam, ever.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-400 text-xs flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2026 MORLA Brands. All rights reserved. | Carbon Neutral Since 2025</p>
+                <div class="space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition">Sustainability Report</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar Overlay -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity duration-300" onclick="toggleCart()"></div>
+    
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-[480px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-morla-brown text-white">
+            <div>
+                <h2 class="font-heading font-bold text-xl">Your Order</h2>
+                <p class="text-xs text-gray-300 mt-1 flex items-center"><i class="fas fa-clock mr-1"></i> <span id="cart-item-count-text">0 items</span></p>
+            </div>
+            <button onclick="toggleCart()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            <!-- Cart items injected here -->
+            <div class="h-full flex flex-col items-center justify-center text-gray-400">
+                <div class="w-20 h-20 bg-morla-cream rounded-full flex items-center justify-center mb-4 floating-badge">
+                    <i class="fas fa-shopping-basket text-3xl text-morla-brown"></i>
+                </div>
+                <p class="text-lg font-medium">Your cart is empty</p>
+                <p class="text-sm text-gray-500 mt-1">Add some delicious items!</p>
+                <button onclick="toggleCart(); showSection('menu')" class="mt-6 bg-morla-orange text-white font-bold py-3 px-6 rounded-full hover:shadow-lg transition transform hover:scale-105">Browse Menu</button>
+            </div>
+        </div>
+
+        <div class="p-6 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between text-gray-500 text-sm">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between text-gray-500 text-sm">
+                    <span>Taxes (8%)</span>
+                    <span id="cart-tax">$0.00</span>
+                </div>
+                <div class="flex justify-between text-green-600 text-sm">
+                    <span><i class="fas fa-leaf mr-1"></i> Eco Discount</span>
+                    <span>-$0.00</span>
+                </div>
+                <div class="flex justify-between mb-2 text-2xl font-bold text-morla-brown pt-4 border-t border-gray-200">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+            </div>
+            <button onclick="checkout()" class="w-full bg-morla-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center">
+                <i class="fas fa-lock mr-2"></i>
+                <span>Checkout Securely</span>
+                <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+            <p class="text-center text-xs text-gray-400 mt-3"><i class="fas fa-shield-alt mr-1"></i> Encrypted & Secure Payment</p>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const menuItems = [
+            { id: 1, name: "Signature Morla Burger", price: 12.99, category: "fast-food", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1e7fb0ac6-5a91-4c44-8ee6-722215792713.png", desc: "Premium beef patty, cheddar, lettuce, tomato, secret sauce. 100% sustainable sourcing." },
+            { id: 2, name: "Artisan Latte", price: 4.50, category: "coffee", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1a71320e5-d0fe-4495-b1d4-07186097ac8a.png", desc: "Rich espresso with steamed milk and silky foam art. Ethically sourced beans." },
+            { id: 3, name: "Chocolate Sprinkle Donut", price: 3.99, category: "dessert", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1fd3ab8bc-505c-4701-9b5b-c0ba6766bfd5.png", desc: "Fluffy donut dipped in premium chocolate with colorful sprinkles." },
+            { id: 4, name: "Golden Fries", price: 3.50, category: "fast-food", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/18fa9b0ee-5fc6-405c-aaea-b6e05cac43d5.png", desc: "Crispy, salted, golden potato fries. Cooked in sustainable oil." },
+            { id: 5, name: "Iced Caramel Macchiato", price: 5.25, category: "coffee", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1a71320e5-d0fe-4495-b1d4-07186097ac8a.png", desc: "Vanilla syrup, milk, espresso, and caramel drizzle over ice." },
+            { id: 6, name: "Classic Cheeseburger", price: 9.99, category: "fast-food", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1e7fb0ac6-5a91-4c44-8ee6-722215792713.png", desc: "Juicy beef patty with melted american cheese and pickles." },
+            { id: 7, name: "Vegan Buddha Bowl", price: 11.99, category: "fast-food", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/135ed7351-d157-48a1-b9de-6090e7accbb2.png", desc: "Quinoa, roasted vegetables, avocado, and tahini dressing." },
+            { id: 8, name: "Cold Brew Coffee", price: 4.75, category: "coffee", image: "https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1a71320e5-d0fe-4495-b1d4-07186097ac8a.png", desc: "Smooth, slow-steeped cold brew. 24-hour extraction process." },
+        ];
+
+        let cart = [];
+
+        // --- Functions ---
+
+        function init() {
+            showSection('home');
+            setupScrollReveal();
+        }
+
+        function setupScrollReveal() {
+            window.addEventListener('scroll', () => {
+                const reveals = document.querySelectorAll('.reveal');
+                const windowHeight = window.innerHeight;
+                const elementVisible = 150;
+
+                reveals.forEach((reveal) => {
+                    const elementTop = reveal.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveal.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                menu.classList.add('block', 'animate-fade-in-up');
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('block', 'animate-fade-in-up');
+            }
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function addToCart(item) {
+            const existingItem = cart.find(i => i.id === item.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCartUI();
+            
+            const btn = event.target.closest('button');
+            if(btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Added!';
+                btn.classList.add('bg-green-600');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('bg-green-600');
+                }, 1500);
+            }
+        }
+
+        function updateQuantity(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const cartTax = document.getElementById('cart-tax');
+            const cartTotal = document.getElementById('cart-total');
+            const cartItemCountText = document.getElementById('cart-item-count-text');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.innerText = totalItems;
+            if (totalItems > 0) {
+                cartCount.classList.remove('scale-0');
+                cartCount.classList.add('scale-100');
+            } else {
+                cartCount.classList.remove('scale-100');
+                cartCount.classList.add('scale-0');
+            }
+
+            cartItemCountText.innerText = `${totalItems} item${totalItems !== 1 ? 's' : ''}`;
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-gray-400 animate-fade-in-up">
+                        <div class="w-20 h-20 bg-morla-cream rounded-full flex items-center justify-center mb-4 floating-badge">
+                            <i class="fas fa-shopping-basket text-3xl text-morla-brown"></i>
+                        </div>
+                        <p class="text-lg font-medium">Your cart is empty</p>
+                        <p class="text-sm text-gray-500 mt-1">Add some delicious items!</p>
+                        <button onclick="toggleCart(); showSection('menu')" class="mt-6 bg-morla-orange text-white font-bold py-3 px-6 rounded-full hover:shadow-lg transition transform hover:scale-105">Browse Menu</button>
+                    </div>`;
+                cartSubtotal.innerText = "$0.00";
+                cartTax.innerText = "$0.00";
+                cartTotal.innerText = "$0.00";
+                return;
+            }
+
+            let html = '';
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                subtotal += item.price * item.quantity;
+                html += `
+                    <div class="flex items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 animate-fade-in-up card-hover" style="animation-delay: ${index * 50}ms">
+                        <img src="${item.image}" class="w-20 h-20 object-cover rounded-xl mr-4 shadow-md">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-morla-brown text-sm mb-1">${item.name}</h4>
+                            <div class="text-xs text-gray-500 mb-2">$${item.price.toFixed(2)} per item</div>
+                            <div class="flex items-center space-x-3">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition"><i class="fas fa-minus text-xs"></i></button>
+                                <span class="font-bold text-morla-brown w-6 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-full bg-morla-orange text-white flex items-center justify-center hover:shadow-md transition"><i class="fas fa-plus text-xs"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end pl-4 border-l border-gray-100 ml-2">
+                            <span class="font-bold text-morla-orange text-sm">$${(item.price * item.quantity).toFixed(2)}</span>
+                            <button onclick="removeFromCart(${item.id})" class="text-xs text-red-400 hover:text-red-600 mt-2 font-medium">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartContainer.innerHTML = html;
+            
+            const tax = subtotal * 0.08;
+            const ecoDiscount = subtotal > 20 ? (subtotal * 0.05) : 0;
+            const total = subtotal + tax - ecoDiscount;
+
+            cartSubtotal.innerText = "$" + subtotal.toFixed(2);
+            cartTax.innerText = "$" + tax.toFixed(2);
+            const ecoEl = document.querySelector('.text-green-600 span:last-child');
+            if (ecoEl) ecoEl.innerText = ecoDiscount > 0 ? '-$' + ecoDiscount.toFixed(2) : '-$0.00';
+            cartTotal.innerText = "$" + total.toFixed(2);
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert("Your cart is empty!");
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+            setTimeout(() => {
+                alert("Thank you for your order! Your food will be ready shortly. 🌱 Carbon-neutral delivery included!");
+                cart = [];
+                updateCartUI();
+                toggleCart();
+                btn.innerHTML = '<i class="fas fa-lock mr-2"></i><span>Checkout Securely</span><i class="fas fa-arrow-right ml-2"></i>';
+            }, 1500);
+        }
+
+        // --- Page Sections ---
+
+        function showSection(sectionName) {
+            const main = document.getElementById('main-content');
+            window.scrollTo(0, 0);
+            main.innerHTML = '';
+
+            if (sectionName === 'home') {
+                main.innerHTML = `
+                    <!-- Hero Section -->
+                    <section class="relative h-[700px] md:h-[850px] flex items-center overflow-hidden">
+                        <div class="absolute inset-0 z-0">
+                            <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/135a5daaa-07e1-449d-a08a-4d3d935d15c7.png" class="w-full h-full object-cover transform scale-105" alt="MORLA Hero">
+                            <div class="absolute inset-0 hero-overlay"></div>
+                        </div>
+                        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                            <div class="max-w-3xl text-white animate-fade-in-up">
+                                <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6 floating-badge">
+                                    <span class="w-2 h-2 bg-morla-green rounded-full animate-pulse"></span>
+                                    <span class="text-sm font-medium">🌱 Carbon Neutral Since 2025</span>
+                                </div>
+                                <h1 class="font-heading font-extrabold text-5xl md:text-7xl lg:text-8xl leading-tight mb-6 drop-shadow-lg">
+                                    Fresh Coffee. <br>
+                                    <span class="text-morla-orange">Fast Bites.</span> <br>
+                                    <span class="text-white">MORLA Moments.</span>
+                                </h1>
+                                <p class="text-lg md:text-xl text-gray-200 mb-10 font-light max-w-xl drop-shadow-md">
+                                    Experience the future of fast-casual dining. AI-powered ordering, sustainable sourcing, and unforgettable flavors.
+                                </p>
+                                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                                    <button onclick="showSection('menu')" class="bg-morla-orange hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-orange-500/40 transform transition hover:-translate-y-1 hover:scale-105 flex items-center justify-center">
+                                        <i class="fas fa-rocket mr-2"></i> Order Now
+                                    </button>
+                                    <button onclick="showSection('menu')" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold py-4 px-10 rounded-full shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center">
+                                        <i class="fas fa-utensils mr-2"></i> View Menu
+                                    </button>
+                                </div>
+                                <div class="mt-12 flex items-center space-x-8 text-sm text-gray-300">
+                                    <div class="flex items-center"><i class="fas fa-bolt text-morla-orange mr-2"></i> 3-Min Pickup</div>
+                                    <div class="flex items-center"><i class="fas fa-leaf text-morla-green mr-2"></i> 100% Sustainable</div>
+                                    <div class="flex items-center"><i class="fas fa-robot text-blue-400 mr-2"></i> AI-Powered</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Stats Section -->
+                    <section class="py-16 bg-white shadow-lg relative z-20 -mt-10 mx-4 md:mx-12 rounded-3xl grid grid-cols-2 md:grid-cols-4 gap-8 text-center reveal">
+                        <div class="p-6">
+                            <div class="text-4xl md:text-5xl font-bold text-morla-orange mb-2">3M+</div>
+                            <p class="text-gray-500 text-sm">Orders Delivered</p>
+                        </div>
+                        <div class="p-6 border-l-0 md:border-l border-gray-100">
+                            <div class="text-4xl md:text-5xl font-bold text-morla-orange mb-2">100%</div>
+                            <p class="text-gray-500 text-sm">Carbon Neutral</p>
+                        </div>
+                        <div class="p-6 border-l-0 md:border-l border-gray-100">
+                            <div class="text-4xl md:text-5xl font-bold text-morla-orange mb-2">50+</div>
+                            <p class="text-gray-500 text-sm">Locations</p>
+                        </div>
+                        <div class="p-6 border-l-0 md:border-l border-gray-100">
+                            <div class="text-4xl md:text-5xl font-bold text-morla-orange mb-2">4.9★</div>
+                            <p class="text-gray-500 text-sm">Customer Rating</p>
+                        </div>
+                    </section>
+
+                    <!-- Featured Categories -->
+                    <section class="py-24 bg-morla-cream">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center mb-16 reveal">
+                                <span class="text-morla-orange font-bold tracking-widest uppercase text-sm mb-2 block">Explore Our Menu</span>
+                                <h2 class="font-heading font-bold text-4xl md:text-5xl text-morla-brown">Craving Something?</h2>
+                                <div class="w-24 h-1 bg-morla-orange mx-auto mt-6 rounded-full"></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div class="group cursor-pointer reveal card-hover" onclick="showSection('menu')">
+                                    <div class="overflow-hidden rounded-3xl shadow-2xl h-96 relative">
+                                        <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1a71320e5-d0fe-4495-b1d4-07186097ac8a.png" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" alt="Coffee">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8">
+                                            <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4">
+                                                <i class="fas fa-mug-hot text-2xl text-white"></i>
+                                            </div>
+                                            <h3 class="text-white font-heading font-bold text-3xl">Premium Coffee</h3>
+                                            <p class="text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">Espresso, Lattes & More</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="group cursor-pointer reveal card-hover" style="transition-delay: 100ms" onclick="showSection('menu')">
+                                    <div class="overflow-hidden rounded-3xl shadow-2xl h-96 relative">
+                                        <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1e7fb0ac6-5a91-4c44-8ee6-722215792713.png" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" alt="Burgers">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8">
+                                            <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4">
+                                                <i class="fas fa-hamburger text-2xl text-white"></i>
+                                            </div>
+                                            <h3 class="text-white font-heading font-bold text-3xl">Gourmet Burgers</h3>
+                                            <p class="text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">Juicy, Fresh & Delicious</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="group cursor-pointer reveal card-hover" style="transition-delay: 200ms" onclick="showSection('menu')">
+                                    <div class="overflow-hidden rounded-3xl shadow-2xl h-96 relative">
+                                        <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/1fd3ab8bc-505c-4701-9b5b-c0ba6766bfd5.png" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" alt="Desserts">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-8">
+                                            <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4">
+                                                <i class="fas fa-cookie-bite text-2xl text-white"></i>
+                                            </div>
+                                            <h3 class="text-white font-heading font-bold text-3xl">Sweet Treats</h3>
+                                            <p class="text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">Donuts, Cakes & Pastries</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- AI Ordering Feature -->
+                    <section class="py-20 bg-morla-brown relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-96 h-96 bg-morla-orange rounded-full filter blur-3xl opacity-20"></div>
+                        <div class="absolute bottom-0 left-0 w-96 h-96 bg-morla-green rounded-full filter blur-3xl opacity-20"></div>
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                                <div class="reveal">
+                                    <span class="inline-block py-1 px-3 rounded-full bg-morla-orange/20 border border-morla-orange/50 text-morla-orange text-sm font-bold mb-6 backdrop-blur-sm">
+                                        <i class="fas fa-robot mr-2"></i> NEW FOR 2026
+                                    </span>
+                                    <h2 class="font-heading font-bold text-4xl md:text-5xl text-white mb-6">AI-Powered Ordering</h2>
+                                    <p class="text-gray-300 text-lg mb-8">Our smart system learns your preferences and suggests the perfect order. Faster, smarter, and more delicious than ever.</p>
+                                    <ul class="space-y-4 mb-8">
+                                        <li class="flex items-center text-gray-300"><i class="fas fa-check-circle text-morla-green mr-3"></i> Personalized recommendations</li>
+                                        <li class="flex items-center text-gray-300"><i class="fas fa-check-circle text-morla-green mr-3"></i> Voice-activated ordering</li>
+                                        <li class="flex items-center text-gray-300"><i class="fas fa-check-circle text-morla-green mr-3"></i> Predictive wait times</li>
+                                        <li class="flex items-center text-gray-300"><i class="fas fa-check-circle text-morla-green mr-3"></i> Smart nutrition tracking</li>
+                                    </ul>
+                                    <button class="bg-morla-orange hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg shadow-orange-500/30 transition transform hover:scale-105">
+                                        Try AI Ordering
+                                    </button>
+                                </div>
+                                <div class="reveal" style="transition-delay: 200ms">
+                                    <div class="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+                                        <div class="flex items-center space-x-4 mb-6">
+                                            <div class="w-12 h-12 bg-morla-orange rounded-full flex items-center justify-center">
+                                                <i class="fas fa-robot text-white text-xl"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold">MORLA AI Assistant</h4>
+                                                <p class="text-gray-400 text-sm">Online now</p>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-4">
+                                            <div class="bg-white/10 rounded-2xl p-4">
+                                                <p class="text-gray-300 text-sm">Hi! I noticed you usually order a Latte on Tuesdays. Would you like to add your usual?</p>
+                                            </div>
+                                            <div class="bg-morla-orange/20 rounded-2xl p-4 ml-auto max-w-xs">
+                                                <p class="text-white text-sm">Yes, please! And add a chocolate donut.</p>
+                                            </div>
+                                            <div class="bg-white/10 rounded-2xl p-4">
+                                                <p class="text-gray-300 text-sm">Perfect! Your order is ready for pickup in 3 minutes. 🎉</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Sustainability Section -->
+                    <section class="py-24 bg-white">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center mb-16 reveal">
+                                <span class="text-morla-green font-bold tracking-widest uppercase text-sm mb-2 block">Our Commitment</span>
+                                <h2 class="font-heading font-bold text-4xl md:text-5xl text-morla-brown">Sustainable Future</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div class="bg-morla-cream p-8 rounded-3xl shadow-lg card-hover reveal">
+                                    <div class="w-16 h-16 bg-morla-green rounded-2xl flex items-center justify-center mb-6 text-white text-2xl">
+                                        <i class="fas fa-leaf"></i>
+                                    </div>
+                                    <h3 class="font-bold text-xl text-morla-brown mb-3">100% Compostable</h3>
+                                    <p class="text-gray-600">All our packaging is fully compostable. Zero plastic, zero waste.</p>
+                                </div>
+                                <div class="bg-morla-cream p-8 rounded-3xl shadow-lg card-hover reveal" style="transition-delay: 100ms">
+                                    <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 text-white text-2xl">
+                                        <i class="fas fa-water"></i>
+                                    </div>
+                                    <h3 class="font-bold text-xl text-morla-brown mb-3">Water Positive</h3>
+                                    <p class="text-gray-600">We give back more water than we use through conservation programs.</p>
+                                </div>
+                                <div class="bg-morla-cream p-8 rounded-3xl shadow-lg card-hover reveal" style="transition-delay: 200ms">
+                                    <div class="w-16 h-16 bg-morla-orange rounded-2xl flex items-center justify-center mb-6 text-white text-2xl">
+                                        <i class="fas fa-solar-panel"></i>
+                                    </div>
+                                    <h3 class="font-bold text-xl text-morla-brown mb-3">Solar Powered</h3>
+                                    <p class="text-gray-600">All our locations run on 100% renewable solar energy.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            } else if (sectionName === 'menu') {
+                main.innerHTML = `
+                    <div class="bg-morla-brown py-24 text-center text-white relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        <div class="absolute -top-24 -right-24 w-96 h-96 bg-morla-orange rounded-full filter blur-3xl opacity-20"></div>
+                        <div class="relative z-10 reveal">
+                            <span class="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-morla-orange text-sm font-bold mb-6 backdrop-blur-sm">
+                                <i class="fas fa-utensils mr-2"></i> FRESHLY PREPARED
+                            </span>
+                            <h1 class="font-heading font-bold text-5xl md:text-7xl mb-6">Our Menu</h1>
+                            <p class="text-gray-300 max-w-2xl mx-auto text-lg">Crafted with passion. Served with speed. Explore our wide range of coffees and fast bites.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                        <div class="flex flex-wrap justify-center gap-4 mb-12 reveal" id="menu-filters">
+                            <button onclick="filterMenu('all')" class="filter-btn active bg-morla-orange text-white px-8 py-3 rounded-full font-medium transition hover:bg-orange-600 shadow-md" data-filter="all">All Items</button>
+                            <button onclick="filterMenu('coffee')" class="filter-btn bg-white text-morla-brown border border-gray-200 px-8 py-3 rounded-full font-medium transition hover:bg-morla-orange hover:text-white hover:border-transparent shadow-sm" data-filter="coffee">Coffee</button>
+                            <button onclick="filterMenu('fast-food')" class="filter-btn bg-white text-morla-brown border border-gray-200 px-8 py-3 rounded-full font-medium transition hover:bg-morla-orange hover:text-white hover:border-transparent shadow-sm" data-filter="fast-food">Fast Food</button>
+                            <button onclick="filterMenu('dessert')" class="filter-btn bg-white text-morla-brown border border-gray-200 px-8 py-3 rounded-full font-medium transition hover:bg-morla-orange hover:text-white hover:border-transparent shadow-sm" data-filter="dessert">Desserts</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menu-grid"></div>
+                    </div>
+                `;
+                renderMenu('all');
+            } else if (sectionName === 'about') {
+                main.innerHTML = `
+                    <div class="bg-morla-cream py-24">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                                <div class="reveal order-2 lg:order-1">
+                                    <span class="text-morla-orange font-bold tracking-widest uppercase text-sm mb-2 block">Our Story</span>
+                                    <h1 class="font-heading font-bold text-4xl md:text-5xl text-morla-brown mb-8 leading-tight">More Than Just <br>Fast Food</h1>
+                                    <p class="text-gray-600 mb-6 leading-relaxed text-lg">
+                                        MORLA was born from a simple idea: you shouldn't have to choose between quality and speed. We believe that fast food can be fresh, and coffee can be an experience.
+                                    </p>
+                                    <p class="text-gray-600 mb-8 leading-relaxed text-lg">
+                                        Founded in 2023, we've quickly become a favorite spot for those who value premium ingredients without the premium wait time. From our ethically sourced beans to our locally sourced beef, every detail matters.
+                                    </p>
+                                    <div class="grid grid-cols-3 gap-6 text-center">
+                                        <div class="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 card-hover">
+                                            <div class="text-4xl font-bold text-morla-orange mb-2">100%</div>
+                                            <div class="text-xs text-gray-500 uppercase font-bold">Fresh Ingredients</div>
+                                        </div>
+                                        <div class="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 card-hover">
+                                            <div class="text-4xl font-bold text-morla-orange mb-2">3min</div>
+                                            <div class="text-xs text-gray-500 uppercase font-bold">Avg Service</div>
+                                        </div>
+                                        <div class="p-6 bg-white rounded-2xl shadow-lg border border-gray-100 card-hover">
+                                            <div class="text-4xl font-bold text-morla-orange mb-2">50+</div>
+                                            <div class="text-xs text-gray-500 uppercase font-bold">Locations</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative reveal order-1 lg:order-2">
+                                    <div class="absolute -top-4 -left-4 w-32 h-32 bg-morla-orange/20 rounded-full blur-2xl"></div>
+                                    <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/16a9eff4d-aa34-42b9-91fe-c2f36954ba5c.png" class="rounded-3xl shadow-2xl w-full relative z-10" alt="About MORLA">
+                                    <div class="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-2xl hidden lg:block z-20 max-w-xs card-hover">
+                                        <div class="flex text-morla-orange mb-2">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="font-heading font-bold text-morla-brown text-lg">"Fast, fresh, and absolutely delicious."</p>
+                                        <p class="text-gray-500 text-sm mt-2">- Food Critic Weekly</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (sectionName === 'contact') {
+                main.innerHTML = `
+                    <div class="bg-white py-24">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center mb-16 reveal">
+                                <h1 class="font-heading font-bold text-4xl md:text-5xl text-morla-brown">Get in Touch</h1>
+                                <p class="text-gray-500 mt-4 text-lg">We'd love to hear from you. Visit us or send a message.</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                <div class="bg-morla-cream p-8 md:p-10 rounded-3xl shadow-xl reveal">
+                                    <form onsubmit="event.preventDefault(); alert('Message sent! We will get back to you soon.');">
+                                        <div class="mb-6">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                                            <input type="text" class="w-full px-4 py-4 rounded-xl border border-gray-300 focus:outline-none focus:border-morla-orange focus:ring-2 focus:ring-morla-orange/20 transition" placeholder="Your Name" required>
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                                            <input type="email" class="w-full px-4 py-4 rounded-xl border border-gray-300 focus:outline-none focus:border-morla-orange focus:ring-2 focus:ring-morla-orange/20 transition" placeholder="your@email.com" required>
+                                        </div>
+                                        <div class="mb-8">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                                            <textarea class="w-full px-4 py-4 rounded-xl border border-gray-300 focus:outline-none focus:border-morla-orange focus:ring-2 focus:ring-morla-orange/20 transition h-32" placeholder="How can we help?" required></textarea>
+                                        </div>
+                                        <button type="submit" class="w-full bg-morla-orange text-white font-bold py-4 rounded-xl hover:bg-orange-600 transition shadow-md transform hover:-translate-y-1">Send Message</button>
+                                    </form>
+                                </div>
+
+                                <div class="space-y-8 reveal" style="transition-delay: 100ms">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        <div class="p-8 bg-white border border-gray-100 rounded-2xl shadow-lg card-hover">
+                                            <div class="w-12 h-12 bg-morla-orange rounded-xl flex items-center justify-center text-white text-xl mb-4">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <h3 class="font-bold text-morla-brown text-lg mb-2">Visit Us</h3>
+                                            <p class="text-gray-600 text-sm">123 Coffee Lane<br>Food City, FC 90210</p>
+                                        </div>
+                                        <div class="p-8 bg-white border border-gray-100 rounded-2xl shadow-lg card-hover">
+                                            <div class="w-12 h-12 bg-morla-orange rounded-xl flex items-center justify-center text-white text-xl mb-4">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <h3 class="font-bold text-morla-brown text-lg mb-2">Call Us</h3>
+                                            <p class="text-gray-600 text-sm">(555) 123-4567<br>Mon-Sun, 6am-10pm</p>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-80 bg-gray-200 rounded-2xl overflow-hidden relative shadow-lg group">
+                                        <img src="https://image.qwenlm.ai/public_source/2217ac82-9214-4140-baeb-7b6e5f4c8588/16a9eff4d-aa34-42b9-91fe-c2f36954ba5c.png" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition duration-700" alt="Map">
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div class="bg-white px-6 py-3 rounded-full shadow-xl font-bold text-morla-brown flex items-center transform group-hover:scale-110 transition">
+                                                <i class="fas fa-location-arrow text-morla-orange mr-3"></i> MORLA HQ
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            setTimeout(setupScrollReveal, 100);
+        }
+
+        function renderMenu(filter) {
+            const grid = document.getElementById('menu-grid');
+            if (!grid) return;
+
+            const filteredItems = filter === 'all' 
+                ? menuItems 
+                : menuItems.filter(item => item.category === filter);
+
+            if (filteredItems.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12">No items found in this category.</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredItems.map((item, index) => `
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden card-hover flex flex-col h-full border border-gray-100 reveal" style="transition-delay: ${index * 50}ms">
+                    <div class="h-60 overflow-hidden relative group">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-sm font-bold text-morla-brown shadow-lg">
+                            $${item.price.toFixed(2)}
+                        </div>
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-300"></div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="font-heading font-bold text-xl text-morla-brown leading-tight">${item.name}</h3>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed">${item.desc}</p>
+                        <button onclick="addToCart({id: ${item.id}, name: '${item.name}', price: ${item.price}, image: '${item.image}'})" class="w-full bg-morla-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition shadow-md hover:shadow-lg transform active:scale-95 flex items-center justify-center">
+                            <i class="fas fa-plus mr-2"></i> Add to Order
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            setTimeout(setupScrollReveal, 50);
+        }
+
+        function filterMenu(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.classList.remove('bg-white', 'text-morla-brown', 'border', 'border-gray-200', 'shadow-sm');
+                    btn.classList.add('bg-morla-orange', 'text-white', 'shadow-md');
+                } else {
+                    btn.classList.add('bg-white', 'text-morla-brown', 'border', 'border-gray-200', 'shadow-sm');
+                    btn.classList.remove('bg-morla-orange', 'text-white', 'shadow-md');
+                }
+            });
+            renderMenu(category);
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
+
